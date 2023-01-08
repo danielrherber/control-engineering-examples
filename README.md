@@ -8,11 +8,11 @@ All examples are for Matlab/Simulink.
 
 | Topic        | Folder          | # of Examples |
 |--------------|-----------------|---------------|
-| Introduction | [/1-introduction](1-introduction) | ?        |
-| Linear Control Design | [/2-linear-control-design](2-linear-control-design) | ?        |
-| Nonlinear Control Design | [/3-nonlinear-control-design](3-nonlinear-control-design) | ?         |
-| Optimal Control | [/4-optimal-control](4-optimal-control) | ?         |
-| Robust and Stochastic Control | [/5-robust-stochastic-control](5-robust-stochastic-control) | ?          |
+| Introduction | [/1-introduction](1-introduction) | 9        |
+| Linear Control Design | [/2-linear-control-design](2-linear-control-design) | 8        |
+| Nonlinear Control Design | [/3-nonlinear-control-design](3-nonlinear-control-design) | 3         |
+| Optimal Control | [/4-optimal-control](4-optimal-control) | 4         |
+| Robust and Stochastic Control | [/5-robust-stochastic-control](5-robust-stochastic-control) | 3          |
 
 ## Running the Matlab Examples
 
@@ -20,11 +20,16 @@ All examples are for Matlab/Simulink.
 	- Validated version is ``R2022b`` but likely compatible with recent older versions
 	- *[CSU-only installation instructions]* [https://www.engr.colostate.edu/ets/matlab/](https://www.engr.colostate.edu/ets/matlab/)
 	- Required toolboxes:
-		- ?Symbolic Math Toolbox
-		- ?Optimization Toolbox
-		- ?Global Optimization Toolbox
+		- Control System Toolbox
+		- Simulink
+		- Simulink Control Design
+		- Robust Control Toolbox
+		- System Identification Toolbox
+		- Symbolic Math Toolbox
+		- Optimization Toolbox
 1. Open an example of interest and run the example
 	- Examples might have some combination of generated command window text and figures 
 1. *[Optional]* Run [test_examples.m](test_examples.m) to verify that all examples work
 	- You will need to make sure all project files are in your path
-	- There are some required user inputs as well (simple ``Enter`` commands will suffice)
+	- There are some required user inputs as well (simply select something or press ``Enter``)
+	- If you see an error, first make sure that you have all the toolboxes listed above installed
