@@ -5,6 +5,7 @@
 *.asv
 *.sublime-project
 *.sublime-workspace
+*.slxc
 
 # ignore certain folders
 .private*/
