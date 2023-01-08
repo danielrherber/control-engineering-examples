@@ -21,7 +21,7 @@ Dx2 = (C0*sqrt(x1 - x2) - Dv*sqrt(x2)*v1)/A;
 Dx3 = ((v2-x3)*ka*u1 + (v3 - x3)*ka*u2)/(A*x1);
 Dx4 = (x3 - x4)*C0*sqrt(x1 - x2)/(A*x2);
 
-% compute first-order taylor series
+% compute first-order Taylor series
 Dx1_taylor = taylor(Dx1,vars,vars0,'Order',2);
 Dx2_taylor = taylor(Dx2,vars,vars0,'Order',2);
 Dx3_taylor = taylor(Dx3,vars,vars0,'Order',2);
@@ -84,7 +84,7 @@ x0 = double([sol.x1; sol.x2; sol.x3; sol.x4]);
 
 % substitute values
 XX = {A Dv C0 ka kh kt x10 x20 x30 x40 u10 u20 v10 v20 v30};
-XX_values = [p' x0' u0' v0']; 
+XX_values = [p' x0' u0' v0'];
 A = double(subs(Al,XX,XX_values));
 B = double(subs(Bl,XX,XX_values));
 Bv = double(subs(Bvl,XX,XX_values));

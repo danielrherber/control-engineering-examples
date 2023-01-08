@@ -13,8 +13,6 @@ g = @(x) 1/M;
 % F = @(x,u) [x(2); f(x) + g(x)*u];
 F = @(x,w) [x(2); f(x) + g(x)*(w - f(x))/g(x)];
 
-
-
 % simulation options
 TSPAN = [0 20];
 X0 = [0.5, 0.5];
