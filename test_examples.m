@@ -9,26 +9,27 @@ addpath(genpath(folder_name))
 ex = {};
 
 % examples in 1-introduction
-ex{end+1} = @ex_co_ob;
+ex{end+1} = @ex_controllability_observability;
 ex{end+1} = @ex_expm;
 ex{end+1} = @ex_linearization;
+ex{end+1} = @ex_matlab_basics;
 ex{end+1} = @ex_modal;
 ex{end+1} = @ex_modred;
 ex{end+1} = @ex_simulation;
 ex{end+1} = @ex_sysid;
-ex{end+1} = @ex_transferfunction;
+ex{end+1} = @ex_tf_bode;
 ex{end+1} = @ex_zoh;
 
 % examples in 2-linear-control-design
-ex{end+1} = @ex_fullfeedback;
+ex{end+1} = @ex_full_state_feedback;
 ex{end+1} = @ex_integral_control;
 ex{end+1} = @ex_mimo_place;
 ex{end+1} = @ex_observer;
 ex{end+1} = @ex_pi;
-ex{end+1} = @ex_simulink;
+ex{end+1} = @ex_simulink_bd;
 % ex{end+1} = @; % ADD ex_simulink_model or ex_simulink_model2
-ex{end+1} = @ex_specs;
-ex{end+1} = @ex_water;
+ex{end+1} = @ex_specifications;
+ex{end+1} = @ex_water_tank;
 % ex{end+1} = @; % ADD ex_water_tank_control
 
 % examples in 3-nonlinear-control-design
