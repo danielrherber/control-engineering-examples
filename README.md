@@ -8,11 +8,15 @@ All examples are for Matlab/Simulink.
 
 | Topic        | Folder          | # of Examples |
 |--------------|-----------------|---------------|
-| Introduction | [/1-introduction](1-introduction) | 9        |
+| Introduction | [/1-introduction](1-introduction) | 10        |
 | Linear Control Design | [/2-linear-control-design](2-linear-control-design) | 8        |
 | Nonlinear Control Design | [/3-nonlinear-control-design](3-nonlinear-control-design) | 3         |
 | Optimal Control | [/4-optimal-control](4-optimal-control) | 4         |
 | Robust and Stochastic Control | [/5-robust-stochastic-control](5-robust-stochastic-control) | 3          |
+
+## References
+1. [**LSC**] E. Hendricks, O. Jannerup, and P. H. Sørensen (2008). *Linear Systems Control*. Springer
+Berlin Heidelberg. DOI: 10.1007/978-3-540-78486-9
 
 ## Running the Matlab Examples
 
