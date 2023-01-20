@@ -102,6 +102,7 @@ end
 
 %--------------------------------------------------------------------------
 % trapezoidal rule-based simulation (not covered in the session)
+% https://en.wikipedia.org/wiki/Trapezoidal_rule
 %--------------------------------------------------------------------------
 function X = trapezoidal_sim(f,T,U,X0)
 
