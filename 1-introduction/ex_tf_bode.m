@@ -1,5 +1,5 @@
 % ex_tf_bode.m
-% transfer function and bode plot of Example 2.1. RLC Circuit in LSC
+% transfer function and bode plot of Example 2.1 RLC Circuit in LSC
 close all; clear; clc
 
 % numerator polynomial coefficients (e.g., 3s^2-4s+5 -> [3 -4 5])

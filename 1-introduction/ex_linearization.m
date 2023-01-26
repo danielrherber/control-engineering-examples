@@ -1,5 +1,5 @@
 % ex_linearization.m
-% simulation of nonlinear and linearized model in Example 2.7. Rocket
+% simulation of nonlinear and linearized model in Example 2.7 Rocket
 % with Air Resistance in LSC
 close all; clear; clc
 

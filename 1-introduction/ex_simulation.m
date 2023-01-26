@@ -1,5 +1,5 @@
 % ex_simulation.m
-% simulation of Example 2.1. RLC Circuit in LSC
+% simulation of Example 2.1 RLC Circuit in LSC
 close all; clear; clc
 
 % assumed parameters
