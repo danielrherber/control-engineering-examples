@@ -44,8 +44,8 @@ U = sin(tau); % <- note tau for the integral
 Part1 = expm(A*t);
 
 % alternative method based on the inverse Laplace transform
-Part2_alt = ilaplace(inv(s*eye(2)-A));
-isequal(Part1,Part2_alt)
+Part1_alt = ilaplace(inv(s*eye(2)-A));
+isequal(Part1,Part1_alt)
 
 % zero state solution
 Part2 = int(expm(A*(t-tau))*B*U,tau,t0,t);
