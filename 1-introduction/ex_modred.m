@@ -1,3 +1,6 @@
+% ex_modred.m
+% model reduction using a balanced realization for the example on
+% pp. 164-165 in A Course in Robust Control Theory
 close all; clear; clc
 
 % symbolic transfer function
