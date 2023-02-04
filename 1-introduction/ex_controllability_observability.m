@@ -1,3 +1,7 @@
+% ex_controllability_observability.m
+% controllability and observability investigations for Example 3.14
+% Stability with Mixed Controllability/Observability Characteristics in LSC
+% using various methods
 close all; clear; clc
 
 % sample LTI system
