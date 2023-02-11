@@ -50,7 +50,7 @@ plot(T1,X1,'r')
 plot(T2,X2,'g')
 plot(T4,X4,'m')
 xlim([0 30]); ylim([-20 10])
-xlabel('t'); ylabel('x(t)')
+xlabel('time [sec]'); ylabel('x(t)')
 
 % outputs
 hf = figure; hf.Color = 'w'; hold on
@@ -60,7 +60,7 @@ plot(T2,C*X2','g')
 plot(T3,C*X3','b')
 plot(T4,C*X4','m')
 xlim([0 30]); ylim([-6 3])
-xlabel('t'); ylabel('y(t)')
+xlabel('time [sec]'); ylabel('y(t)')
 legend('original','-0.67','-1','-0.33','-4')
 
 % control
@@ -70,6 +70,6 @@ plot(T1,K1*X1' + r,'r')
 plot(T2,K2*X2' + r,'g')
 plot(T3,K3*X3' + r,'b')
 plot(T4,K4*X4' + r,'m')
-xlim([0 30]); ylim([-100 100])
-xlabel('t'); ylabel('u(t)')
+xlim([0 30]); ylim([-200 200])
+xlabel('time [sec]'); ylabel('u(t)')
 legend('original','-0.67','-1','-0.33','-4')
