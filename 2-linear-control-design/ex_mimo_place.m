@@ -38,8 +38,7 @@ sys1 = ss(A-B1*K1,Bv,C,[]);
 sys3 = ss(A-B3*K3,Bv,C,[]);
 
 % simulations options
-X0 = [0;0;0];
-% X0 = [1;1;1];
+X0 = [1;1;1];
 tfinal = 100;
 T = linspace(0,tfinal,10000)';
 
@@ -52,10 +51,11 @@ v = 1*ones(size(T));
 [Y3,T3,X3] = lsim(sys3,v,T,X0);
 
 % plot outputs
-figure; hold on
+hf = figure; hf.Color = 'w'; hold on
 plot(T1,Y1)
 plot(T3,Y3)
 plot(T,v)
+xlabel('time [sec]'); ylabel('output');
 legend('Y with 1 input','Y with 3 inputs','disturbance')
 
 % transfer functions between the output and disturbance
