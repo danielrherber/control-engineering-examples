@@ -10,6 +10,7 @@
 # ignore certain folders
 .private*/
 plots*/
+slprj*/
 
 # ignore specific files
 figname.png
