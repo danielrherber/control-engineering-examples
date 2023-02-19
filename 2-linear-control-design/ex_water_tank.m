@@ -1,3 +1,7 @@
+% ex_water_tank.m
+% matrices for Example 4.13 Water Tank Process Control with Multiple
+% Integrators in LSC used when initializing the Simulin model in
+% ex_water_tank_control.slx
 close all; clear; clc
 
 n = 4; % states
@@ -99,7 +103,6 @@ P = [-0.095+0.02j -0.095-0.02j -0.08+0.06j -0.08-0.06j -0.05+0.085j -0.05-0.085j
 % C2 = [0 2 0 0; 0 0 0 0.1];
 % A-A2
 % B-B2
-
 
 Ai = [A, zeros(n,r); -C zeros(r,r)];
 Bi = [B; zeros(r,m)];
