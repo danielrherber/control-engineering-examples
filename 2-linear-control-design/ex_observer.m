@@ -1,3 +1,7 @@
+% ex_observer.m
+% illustration of eigenvalue assignment for a full-order and reduced-order
+% observer from Example 4.20 Reduced Order Observer for a Third Order
+% System in LSC using the Matlab place command
 close all; clear; clc
 
 % system matrices
@@ -45,9 +49,11 @@ X0 = [0 0 0 -0.03 0.01 0.02]';
 [Y,T,X] = lsim(sysNew,U,T,X0);
 
 % plot states (actual and estimated)
-figure; hold on
-plot(T,X(:,1:3),'k')
-plot(T,Y(:,2:4),'r')
+hf = figure; hf.Color = 'w'; hold on
+plot(T,X(:,1:3),'k','DisplayName','Actual States')
+plot(T,Y(:,2:4),'r','DisplayName','Estimated States')
+xlabel('Time [sec]'); ylabel('States'); legend();
+title('Full-order Observer');
 
 %% reduced-order
 % number of states and outputs
@@ -75,6 +81,8 @@ X0 = [0 0 0 0.01 0.02]';
 [Y,T,X] = lsim(sysNew,U,T,X0);
 
 % plot states (actual and estimated)
-figure; hold on
-plot(T,X(:,1:3),'k')
-plot(T,Y(:,2:3),'r')
+hf = figure; hf.Color = 'w'; hold on
+plot(T,X(:,1:3),'k','DisplayName','Actual States')
+plot(T,Y(:,2:3),'r','DisplayName','Estimated States')
+xlabel('Time [sec]'); ylabel('States'); legend();
+title('Reduced-order Observer');
