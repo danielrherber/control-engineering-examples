@@ -1,5 +1,5 @@
-% ex_mimo_place.m
-% illustration of eigenstructure assignment for MIMO systems using a
+% ex_mi_place.m
+% illustration of eigenstructure assignment for multi-input systems using a
 % modified system from Example 4.5 Continuous Control via the Controller
 % Canonical Form in LSC using the Matlab place command
 close all; clear; clc
