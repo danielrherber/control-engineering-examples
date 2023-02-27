@@ -1,3 +1,5 @@
+% ex_pi.m
+% simulation of simple P and PI controllers on a third-order LTI system
 close all; clear; clc
 
 % augmented system matrices
@@ -15,47 +17,54 @@ OPTIONS = odeset('RelTol',1e-13,'AbsTol',1e-10);
 
 % initialize figures
 hf = figure(1); hf.Color = 'w'; hold on
-ylabel('y')
+ylabel('Output'); xlabel('Time [sec]'); legend();
 hf = figure(2); hf.Color = 'w'; hold on
-ylabel('u')
+ylabel('Control'); xlabel('Time [sec]'); legend();
 
-%% parameters
-Kp = 10;
-Ti = 5;
-r = 10;
-v = -1;
+%--------------------------------------------------------------------------
+% parameters (try changing these)
+%--------------------------------------------------------------------------
+Kp = 100; % proportional term gain
+Ti = 5; % integral time constant
+r = 10; % reference (constant)
+v = -1; % disturbance (constant)
 
-%% P only
+%--------------------------------------------------------------------------
+% P controller
+%--------------------------------------------------------------------------
 % simulate
 [Tp,Xp] = ode45(@(t,x) derivP(t,x,r,Kp,A,B,Bv,C,v),TSPAN,X0,OPTIONS);
 
-% output
+% plot output
 figure(1)
-plot(Tp,C*Xp')
+plot(Tp,C*Xp',"DisplayName","y for P controller")
 
-% control
+% plot control
 figure(2)
 Yp = C*Xp';
 Up = Kp*(r-Yp);
-plot(Tp,Up)
+plot(Tp,Up,"DisplayName","u for P controller")
 
-%% PI
+%--------------------------------------------------------------------------
+% PI controller
+%--------------------------------------------------------------------------
 % initial integrator state
 X0(end+1) = 0;
 
 % simulate
 [Ti,Xi] = ode45(@(t,x) derivPI(t,x,r,Kp,A,B,Bv,C,v,Ti),TSPAN,X0,OPTIONS);
 
-% output
+% plot output
 figure(1)
-plot(Ti,C*Xi(:,1:end-1)')
+plot(Ti,C*Xi(:,1:end-1)',"DisplayName","y for PI controller")
 
-% control
+% plot control
 figure(2)
 Yi = C*Xi(:,1:end-1)';
 Ui = Kp*(r-Yi) + Kp/Ti*Xi(:,end);
-plot(Ti,Ui)
+plot(Ti,Ui,"DisplayName","u for PI controller")
 
+%--------------------------------------------------------------------------
 % P controller derivative function
 function Dx = derivP(t,x,r,Kp,A,B,Bv,C,v)
 
@@ -73,6 +82,7 @@ Dx = A*x + B*u + Bv*v;
 
 end
 
+%--------------------------------------------------------------------------
 % PI controller derivative function
 function Dx = derivPI(t,x,r,Kp,A,B,Bv,C,v,Ti)
 
