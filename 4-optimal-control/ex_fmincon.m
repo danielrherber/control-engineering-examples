@@ -1,14 +1,18 @@
+% ex_fmincon.m
+% example using fmincon to solve a 2d finite-dimensional optimization
 close all; clear; clc
 
 % solve the following finite-dimensional optimization problem:
-% min J = x1^2 + a1*x2^2;
-% subject to: g = a2/x1 - x2 <= 0
+% min J = x1*x2
+% subject to: h1 = 2*x1 + 2*x2 = perimeter
+%             g1 = x1 >= 0
+%             g2 = x2 >= 0
 
 % for visualizing some things (see below)
 iteration_plot_setup
 
 % problem parameters
-a1 = 2; a2 = 1.5;
+perimeter = 20;
 
 % fmincon options (to display iteration progress and other plots)
 options = optimoptions('fmincon','Display','iter',...
@@ -17,43 +21,45 @@ options = optimoptions('fmincon','Display','iter',...
 
 % solve the optimization problem using fmincon
 % type help fmincon to see all the inputs
-[x,fval] = fmincon(@(x) objective(x,a1),[1;1],[],[],[],[],[],[],...
-    @(x) constraints(x,a2),options);
+[x,fval] = fmincon(@(x) objective(x),[1;1],[],[],[],[],[],[],...
+    @(x) constraints(x,perimeter),options);
 
 % display final (optimal) value of x and the objective function with this x
 disp(x)
 disp(fval)
 
+% customize the Optimization Plot Function figure
+hf = figure(1); hf.Color = 'w';
+ha = gca; ha.YScale = 'log';
+
+%--------------------------------------------------------------------------
 % objective function
-function J = objective(x,a1)
+function J = objective(x)
 
 % objective function value
-J = x(1)^2 + a1*x(2)^2;
+J = x(1)*x(2);
+% J = x(1)^4 + x(2)^2 + x(1)*x(2); % another objective function
 
 end
 
+%--------------------------------------------------------------------------
 % constraint function
-function [g,h] = constraints(x,a2)
+function [g,h] = constraints(x,perimeter)
 
-% inequality constraints
-g = a2/x(1) - x(2);
+% inequality constraints, g(x) <= 0
+g1 = -x(1);
+g2 = -x(2);
+g = [g1;g2];
 
-% inequality constraints
-h = [];
+% equality constraints, h(x) = 0
+h = 2*x(1) + 2*x(2) - perimeter;
 
 end
 
-
-
-
-
-
-
-
-
+%--------------------------------------------------------------------------
 % NOTE: this stuff below is just to visualize the optimization algorithm
 % progress. It is not needed in the class examples.
-
+%--------------------------------------------------------------------------
 % optional customized output function to displaying optimization algorithm
 % progress
 function stop = outfun(x,optimValues,state)
