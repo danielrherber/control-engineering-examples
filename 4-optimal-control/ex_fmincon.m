@@ -1,12 +1,12 @@
 % ex_fmincon.m
-% example using fmincon to solve a 2d finite-dimensional optimization
-close all; clear; clc
+% example using fmincon to solve a finite-dimensional optimization problem
+close all; clear; clc; clear global p_old
 
 % solve the following finite-dimensional optimization problem:
-% min J = x1*x2
-% subject to: h1 = 2*x1 + 2*x2 = perimeter
-%             g1 = x1 >= 0
-%             g2 = x2 >= 0
+% min J = -p1*p2
+% subject to: h1 : 2*p1 + 2*p2 = perimeter
+%             g1 : p1 >= 0
+%             g2 : p2 >= 0
 
 % for visualizing some things (see below)
 iteration_plot_setup
@@ -19,14 +19,17 @@ options = optimoptions('fmincon','Display','iter',...
     'PlotFcn',{'optimplotfvalconstr','optimplotfirstorderopt'},...
     'OutputFcn',@outfun);
 
+% initial guess
+p_guess = [1;1];
+
 % solve the optimization problem using fmincon
 % type help fmincon to see all the inputs
-[x,fval] = fmincon(@(x) objective(x),[1;1],[],[],[],[],[],[],...
-    @(x) constraints(x,perimeter),options);
+[p_opt,J_opt] = fmincon(@(p) objective(p),p_guess,[],[],[],[],[],[],...
+    @(p) constraints(p,perimeter),options);
 
-% display final (optimal) value of x and the objective function with this x
-disp(x)
-disp(fval)
+% display final (optimal) p value and the optimal objective function value
+disp(p_opt)
+disp(J_opt)
 
 % customize the Optimization Plot Function figure
 hf = figure(1); hf.Color = 'w';
@@ -34,25 +37,25 @@ ha = gca; ha.YScale = 'log';
 
 %--------------------------------------------------------------------------
 % objective function
-function J = objective(x)
+function J = objective(p)
 
 % objective function value
-J = x(1)*x(2);
-% J = x(1)^4 + x(2)^2 + x(1)*x(2); % another objective function
+J = -p(1)*p(2);
+% J = p(1)^4 + p(2)^2 + p(1)*p(2); % another objective function
 
 end
 
 %--------------------------------------------------------------------------
 % constraint function
-function [g,h] = constraints(x,perimeter)
+function [g,h] = constraints(p,perimeter)
 
 % inequality constraints, g(x) <= 0
-g1 = -x(1);
-g2 = -x(2);
+g1 = -p(1);
+g2 = -p(2);
 g = [g1;g2];
 
 % equality constraints, h(x) = 0
-h = 2*x(1) + 2*x(2) - perimeter;
+h = 2*p(1) + 2*p(2) - perimeter;
 
 end
 
@@ -62,7 +65,7 @@ end
 %--------------------------------------------------------------------------
 % optional customized output function to displaying optimization algorithm
 % progress
-function stop = outfun(x,optimValues,state)
+function stop = outfun(p,optimValues,state)
 
 % don't stop the optimization routing here
 stop = false;
@@ -71,19 +74,19 @@ stop = false;
 figure(2); hold on
 
 % get previous optimization variable value
-global x_old
-if isempty(x_old)
-    x_old = x;
+global p_old
+if isempty(p_old)
+    p_old = p;
 end
 
 % plot current optimization variables (2D problem)
-plot([x_old(1) x(1)],[x_old(2) x(2)],'.-','markersize',16)
+plot([p_old(1) p(1)],[p_old(2) p(2)],'.-','markersize',16)
 
 % update x_old
-x_old = x;
+p_old = p;
 
 % display the current iteration number
-text(x(1)+0.01,x(2)-0.01,string(optimValues.iteration))
+text(p(1)+0.01,p(2)-0.01,string(optimValues.iteration))
 
 end
 
@@ -91,13 +94,13 @@ function iteration_plot_setup
 
 % initialize figure 2
 hf = figure(2); hf.Color = 'w'; clf; hold on
-xlabel('x_1')
-ylabel('x_2')
-
-% known solution to this problem
-plot(1.456475488389924,1.029883936327159,'.k','markersize',16)
+xlabel('p_1')
+ylabel('p_2')
 
 global x_old
 x_old = [];
+
+ha = gca;
+ha.FontSize = 16;
 
 end
