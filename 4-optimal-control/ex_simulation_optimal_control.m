@@ -35,7 +35,7 @@ auxdata.nu = 1;
 auxdata.phi_indices = 1:(auxdata.nt);
 
 % initial guess for U
-P0 = linspace(0,2*pi,auxdata.nt); % linearly increasing (good guess)
+P0 = linspace(0,2*pi,auxdata.nt)'; % linearly increasing (good guess)
 % P0 = zeros(auxdata.nt*auxdata.nu,1); % all zeros (poor guess) <- try this
 
 % fmincon options
@@ -50,7 +50,7 @@ U = P(auxdata.phi_indices);
 
 % obtain the optimal solution (on a more dense time grid)
 [To,Xo] = ode45(@(t,x) derivative(t,x,U,auxdata),linspace(0,tf,1e4),...
-    auxdata.X0,odeset('RelTol',1e-13)); % run a simulation
+    auxdata.X0,odeset('RelTol',1e-13));
 
 % extract states from the final simulation
 r = Xo(:,1); T = Xo(:,2); vr = Xo(:,3); vT = Xo(:,4);
