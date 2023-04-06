@@ -1,4 +1,4 @@
-% ex_direct_transcription_optimal_control.m
+% ex_direct_transcription.m
 % example of a single-step direct transcription method using the
 % trapezoidal rule for the defect constraints and fmincon to solve the
 % finite-dimensional optimization problem
