@@ -1,9 +1,9 @@
+% ex_lqg.m
+% illustration of the design an Linear-quadratic Gaussian (LQG) regulator
+% www.mathworks.com/help/control/getstart/design-an-lqg-servo-controller.html
 close all; clear; clc;
 
-% code from:
-% https://www.mathworks.com/help/control/getstart/design-an-lqg-servo-controller.html
-
-% create the state space system
+% create the state-space system
 A = [0 1 0;0 0 1;1 0 0];
 B = [0.3 1;0 1;-0.3 0.9];
 G = [-0.7 1.12; -1.17 1; .14 1.5];
@@ -12,13 +12,13 @@ D = [0.53 -0.61];
 H = [-1.2 -0.89];
 sys = ss(A,[B G],C,[D H]);
 
-% construct the optimal state-feedback with integral control gain using the
-% given cost function
+% construct the optimal state-feedback with integral control gain using a
+% given quadratic cost function
 nx = 3; % number of states
 ny = 1; % number of outputs
 Q = blkdiag(0.1*eye(nx),eye(ny));
 R = [1 0;0 2];
-[K,S,CLP] = lqi(ss(A,B,C,D),Q,R);
+[K,S,CLP] = lqi(ss(A,B,C,D),Q,R); % linear-quadratic-integral
 
 % construct Kalman state estimator using the given noise covariance data
 Qn = [4 2;2 1];
@@ -34,7 +34,7 @@ eig(A)
 eig(trksys.A)
 
 % alternative approaches
-% https://www.mathworks.com/help/control/getstart/linear-quadratic-gaussian-lqg-design.html
+% www.mathworks.com/help/control/getstart/linear-quadratic-gaussian-lqg-design.html
 % reg = lqg(sys,QXU,QWV)
 % [K,S,e] = lqr(SYS,Q,R,N)
 % [kalmf,L,P] = kalman(sys,Q,R,N)
