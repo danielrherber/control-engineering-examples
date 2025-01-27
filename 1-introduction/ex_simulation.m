@@ -2,7 +2,6 @@
 % simulation of an electrical RLC circuit with a CT LTI state-space model
 % [reference] Example 2.1 RLC Circuit in LSC
 % [course] Session 1 - Modeling for Control Design
-
 close all; clear; clc
 
 % assumed parameters
