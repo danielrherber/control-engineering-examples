@@ -14,6 +14,7 @@ ex{end+1} = @ex_expm;
 ex{end+1} = @ex_linearization;
 ex{end+1} = @ex_matlab_basics;
 ex{end+1} = @ex_modal;
+ex{end+1} = @ex_modal_interactive;
 ex{end+1} = @ex_modred;
 ex{end+1} = @ex_simulation;
 ex{end+1} = @ex_sysid;
@@ -23,14 +24,15 @@ ex{end+1} = @ex_zoh;
 % examples in 2-linear-control-design
 ex{end+1} = @ex_full_state_feedback;
 ex{end+1} = @ex_integral_control;
-ex{end+1} = @ex_mimo_place;
+ex{end+1} = @ex_mi_place;
 ex{end+1} = @ex_observer;
 ex{end+1} = @ex_pi;
+ex{end+1} = @ex_pidtuner;
 ex{end+1} = @ex_simulink_bd;
-% ex{end+1} = @; % ADD ex_simulink_model or ex_simulink_model2
+ex{end+1} = @() sim('ex_simulink_model');
 ex{end+1} = @ex_specifications;
 ex{end+1} = @ex_water_tank;
-% ex{end+1} = @; % ADD ex_water_tank_control
+% ex{end+1} = @() sim('ex_water_tank_control'); % FIX: causes error
 
 % examples in 3-nonlinear-control-design
 ex{end+1} = @ex_feedback_linearization;
@@ -38,10 +40,12 @@ ex{end+1} = @ex_gain_scheduling;
 ex{end+1} = @ex_sliding_mode;
 
 % examples in 4-optimal-control
+ex{end+1} = @ex_direct_transcription;
 ex{end+1} = @ex_fmincon;
-ex{end+1} = @ex_lqr;
-ex{end+1} = @ex_single_shooting;
-ex{end+1} = @ex_single_step_dt;
+ex{end+1} = @ex_lqr_robot_eqs;
+ex{end+1} = @ex_lqr_robot_linear;
+% ex{end+1} = @() sim('ex_lqr_robot_simulink'); % FIX: causes error
+ex{end+1} = @ex_simulation_optimal_control;
 
 % examples in 5-robust-stochastic-control
 ex{end+1} = @ex_Hinfinty;

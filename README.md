@@ -8,10 +8,10 @@ All examples are for Matlab/Simulink.
 
 | Topic        | Folder          | # of Examples |
 |--------------|-----------------|---------------|
-| Introduction | [/1-introduction](1-introduction) | 10        |
-| Linear Control Design | [/2-linear-control-design](2-linear-control-design) | 8        |
+| Introduction | [/1-introduction](1-introduction) | 11        |
+| Linear Control Design | [/2-linear-control-design](2-linear-control-design) | 10        |
 | Nonlinear Control Design | [/3-nonlinear-control-design](3-nonlinear-control-design) | 3         |
-| Optimal Control | [/4-optimal-control](4-optimal-control) | 4         |
+| Optimal Control | [/4-optimal-control](4-optimal-control) | 5         |
 | Robust and Stochastic Control | [/5-robust-stochastic-control](5-robust-stochastic-control) | 3          |
 
 ## References
