@@ -1,6 +1,8 @@
 % ex_linearization.m
-% simulation of nonlinear and linearized model in Example 2.7 Rocket
-% with Air Resistance in LSC
+% simulation of a nonlinear and linearized model of a rocket with air
+% resistance
+% [reference] Example 2.7 Rocket with Air Resistance in LSC
+% [course] Session 1 - Modeling for Control Design
 close all; clear; clc
 
 % assumed parameters
@@ -13,8 +15,8 @@ T0 = 3;
 V0 = sqrt((T0-m*g)/b);
 
 % user-defined thrust input
-% T = @(t) T0 + (t>=30)*2*T0 - (t>=60)*2.25*T0;
-T = @(t) T0 + sin(t); % <- also try this
+T = @(t) T0 + (t>=30)*2*T0 - (t>=60)*2.25*T0;
+% T = @(t) T0 + sin(t); % <- also try this
 
 % linear matrices
 A = -2*b/m*V0; B = 1/m;
@@ -48,27 +50,30 @@ X0linear = X0 - V0;
 plot_example(tspan,V0,T_nonlin,X_nonlin,T_lin,X_lin+V0)
 
 %--------------------------------------------------------------------------
-% plotting code (not the main content)
-%--------------------------------------------------------------------------
+% plotting code
+% (not the main content)
 function plot_example(TSPAN,V0,T_nonlin,X_nonlin,T_lin,X_lin)
 
-% colors
+% colors and other parameters
 niceblue = [77, 121, 167]/255;
 nicered = [225, 86, 86]/255;
-% nicegreen = [109, 195, 80]/255;
-% nicegray = [242, 242, 242]/255;
-xmediumgray = [170, 170, 170]/255;
+nicegray = [170, 170, 170]/255;
+LineWidth = 1;
+MarkerSize = 12;
+FontSize = 12;
+plotOpts = {'LineWidth',LineWidth,'MarkerSize',MarkerSize};
 
 % initialize figure
 hf = figure; hf.Color = 'w'; hold on
-LineWidth = 1;
 
-plot(TSPAN,[V0 V0],'--','Color',xmediumgray,'LineWidth',LineWidth,'DisplayName','V0');
-plot(T_nonlin,X_nonlin,'Color',niceblue,'LineWidth',LineWidth,'DisplayName','Nonlinear Model')
-plot(T_lin,X_lin,'Color',nicered,'LineWidth',LineWidth,'DisplayName','Linearized Model')
+plot(TSPAN,[V0 V0],'--',plotOpts{:},'Color',nicegray,'DisplayName','V0');
+plot(T_nonlin,X_nonlin,plotOpts{:},'Color',niceblue,'DisplayName','Nonlinear Model')
+plot(T_lin,X_lin,plotOpts{:},'Color',nicered,'DisplayName','Linearized Model')
 
 xlabel('Time [sec]')
 ylabel('State v')
+
+ha = gca; ha.XColor = 'k'; ha.YColor = 'k'; ha.LineWidth = 1; ha.FontSize = FontSize;
 
 legend();
 
