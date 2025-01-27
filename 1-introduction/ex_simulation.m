@@ -1,5 +1,8 @@
 % ex_simulation.m
-% simulation of Example 2.1 RLC Circuit in LSC
+% simulation of an electrical RLC circuit with a CT LTI state-space model
+% [reference] Example 2.1 RLC Circuit in LSC
+% [course] Session 1 - Modeling for Control Design
+
 close all; clear; clc
 
 % assumed parameters
@@ -58,52 +61,57 @@ X_tr = trapezoidal_sim(f,T,U,X0);
 plot_example(T,X_ef,X_tr,T_ode45,X_ode45)
 
 %--------------------------------------------------------------------------
-% plotting code (not the main content)
-%--------------------------------------------------------------------------
+% plotting code
+% (not the main content)
 function plot_example(T,X_ef,X_tr,T_ode45,X_ode45)
 
-% colors
+% colors and other parameters
 niceblue = [77, 121, 167]/255;
 nicered = [225, 86, 86]/255;
-% nicegreen = [109, 195, 80]/255;
-% nicegray = [242, 242, 242]/255;
-xmediumgray = [170, 170, 170]/255;
+nicegray = [170, 170, 170]/255;
+LineWidth = 1;
+MarkerSize = 12;
+FontSize = 12;
+plotOpts = {'LineWidth',LineWidth,'MarkerSize',MarkerSize};
 
 % initialize figure
 hf = figure; hf.Color = 'w'; hold on
 t = tiledlayout('flow','GridSize',[2 1],'TileSpacing','tight');
-LineWidth = 1;
 
 %--- state 1 results
 nexttile(t,[1 1]); hold on
 
-plot(T_ode45,X_ode45(:,1),'.-','Color',xmediumgray,'LineWidth',LineWidth,'DisplayName','ode45');
-plot(T,X_ef(1,:),'.-','Color',niceblue,'LineWidth',LineWidth,'DisplayName','Euler Forward')
-plot(T,X_tr(1,:),'.-','Color',nicered,'LineWidth',LineWidth,'DisplayName','Trapezoidal Rule')
+plot(T_ode45,X_ode45(:,1),'.-',plotOpts{:},'Color',nicegray,'DisplayName','ode45');
+plot(T,X_ef(1,:),'.-',plotOpts{:},'Color',niceblue,'DisplayName','Euler Forward');
+plot(T,X_tr(1,:),'.-',plotOpts{:},'Color',nicered,'DisplayName','Trapezoidal Rule');
 
 xlabel('Time [sec]')
 ylabel('State 1')
+
+ha = gca; ha.XColor = 'k'; ha.YColor = 'k'; ha.LineWidth = 1; ha.FontSize = FontSize;
 
 legend();
 
 %--- state 2 results
 nexttile(t,[1 1]); hold on
 
-plot(T_ode45,X_ode45(:,2),'.-','Color',xmediumgray,'LineWidth',LineWidth,'DisplayName','ode45');
-plot(T,X_ef(2,:),'.-','Color',niceblue,'LineWidth',LineWidth,'DisplayName','Euler Forward')
-plot(T,X_tr(2,:),'.-','Color',nicered,'LineWidth',LineWidth,'DisplayName','Trapezoidal Rule')
+plot(T_ode45,X_ode45(:,2),'.-',plotOpts{:},'Color',nicegray,'DisplayName','ode45');
+plot(T,X_ef(2,:),'.-',plotOpts{:},'Color',niceblue,'DisplayName','Euler Forward');
+plot(T,X_tr(2,:),'.-',plotOpts{:},'Color',nicered,'DisplayName','Trapezoidal Rule');
 
 xlabel('Time [sec]')
 ylabel('State 2')
+
+ha = gca; ha.XColor = 'k'; ha.YColor = 'k'; ha.LineWidth = 1; ha.FontSize = FontSize;
 
 legend();
 
 end
 
 %--------------------------------------------------------------------------
-% trapezoidal rule-based simulation (not covered in the session)
+% trapezoidal rule-based simulation
+% (not covered in the session and not an efficient implementation)
 % https://en.wikipedia.org/wiki/Trapezoidal_rule
-%--------------------------------------------------------------------------
 function X = trapezoidal_sim(f,T,U,X0)
 
 % assign initial state value
