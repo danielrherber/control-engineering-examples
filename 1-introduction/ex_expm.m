@@ -1,7 +1,8 @@
 % ex_expm.m
-% simulation of an LTI system from Example 3.3 Transfer Function of a
-% Discrete Time System in LSC using various methods, including the matrix
+% simulation of an LTI system using various methods, including the matrix
 % exponential
+% [reference] Example 3.3 Transfer Function of a Discrete Time System
+% [course] Session 2 - Analysis of State-Space Models (1)
 close all; clear; clc
 
 % state-space matrices
@@ -69,49 +70,54 @@ end
 plot_example(T_sim,X_sim,X_sym)
 
 %--------------------------------------------------------------------------
-% plotting code (not the main content)
-%--------------------------------------------------------------------------
+% plotting code
+% (not the main content)
 function plot_example(T_sim,X_sim,X_sym)
 
-% colors
+% colors and other parameters
 niceblue = [77, 121, 167]/255;
 nicered = [225, 86, 86]/255;
-% nicegreen = [109, 195, 80]/255;
-% nicegray = [242, 242, 242]/255;
-% xmediumgray = [170, 170, 170]/255;
+LineWidth = 1;
+MarkerSize = 12;
+FontSize = 12;
+plotOpts = {'LineWidth',LineWidth,'MarkerSize',MarkerSize};
 
 % initialize figure
 hf = figure; hf.Color = 'w'; hold on
-LineWidth = 1;
+t = tiledlayout('flow','GridSize',[2 1],'TileSpacing','tight');
+
+%--- states
+nexttile(t,[1 1]); hold on
 
 % plot simulation results
-plot(T_sim,X_sim(:,1),'Color',nicered,'linewidth',LineWidth,"DisplayName","x_1 ode45")
-plot(T_sim,X_sim(:,2),'Color',niceblue,'linewidth',LineWidth,"DisplayName","x_2 ode45")
+plot(T_sim,X_sim(:,1),plotOpts{:},'Color',nicered,"DisplayName","$x_1$ simulation")
+plot(T_sim,X_sim(:,2),plotOpts{:},'Color',niceblue,"DisplayName","$x_2$ simulation")
 
 % plot symbolic method results
-plot(T_sim,X_sym(1,:),'.','Color',nicered,'linewidth',LineWidth,"DisplayName","x_1 symbolic")
-plot(T_sim,X_sym(2,:),'.','Color',niceblue,'linewidth',LineWidth,"DisplayName","x_2 symbolic")
+plot(T_sim,X_sym(1,:),'.',plotOpts{:},'Color',nicered,"DisplayName","$x_1$ exact")
+plot(T_sim,X_sym(2,:),'.',plotOpts{:},'Color',niceblue,"DisplayName","$x_2$ exact")
 
 xlabel('Time [sec]')
 ylabel('States')
 
-legend();
+ha = gca; ha.XColor = 'k'; ha.YColor = 'k'; ha.LineWidth = 1; ha.FontSize = FontSize;
 
-% initialize figure
-hf = figure; hf.Color = 'w'; hold on
-LineWidth = 1;
+hl = legend(); hl.Interpreter = 'latex';
+
+%--- errors
+nexttile(t,[1 1]); hold on
 
 % plot simulation results
-plot(T_sim,abs(X_sim(:,1)-X_sym(1,:)'),'Color',nicered,'linewidth',LineWidth,"DisplayName","x_1")
-plot(T_sim,abs(X_sim(:,2)-X_sym(2,:)'),'Color',niceblue,'linewidth',LineWidth,"DisplayName","x_2")
+plot(T_sim,abs(X_sim(:,1)-X_sym(1,:)'),plotOpts{:},'Color',nicered,"DisplayName","$x_1$")
+plot(T_sim,abs(X_sim(:,2)-X_sym(2,:)'),plotOpts{:},'Color',niceblue,"DisplayName","$x_2$")
 
 xlabel('Time [sec]')
 ylabel('State Error')
 
-legend();
-
-ha = gca;
+ha = gca; ha.XColor = 'k'; ha.YColor = 'k'; ha.LineWidth = 1; ha.FontSize = FontSize;
 ha.YScale = 'log';
+
+hl = legend(); hl.Interpreter = 'latex';
 
 ylim([1e-19 1e0])
 
