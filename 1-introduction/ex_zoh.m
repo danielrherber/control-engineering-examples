@@ -1,7 +1,9 @@
 % ex_zoh.m
-% simulation of an LTI system from Example 3.3 Transfer Function of a
-% Discrete Time System in LSC using various methods, including zero-order
-% hold
+% simulation of continuous-time and discrete-time models (zero-order hold)
+% of an LTI system
+% [reference] Example 3.3 Transfer Function of a Discrete Time System in LSC
+% [reference] https://www.youtube.com/watch?v=PsBfTzsGsow
+% [course] Session 2 - Analysis of State-Space Models (1)
 close all; clear; clc
 
 % LTI matrices
@@ -60,34 +62,36 @@ end
 plot_example(T_sim,X_sim,T_dt,X_dt)
 
 %--------------------------------------------------------------------------
-% plotting code (not the main content)
-%--------------------------------------------------------------------------
+% plotting code
+% (not the main content)
 function plot_example(T_sim,X_sim,T_dt,X_dt)
 
-% colors
+% colors and other parameters
 niceblue = [77, 121, 167]/255;
 nicered = [225, 86, 86]/255;
 nicegreen = [109, 195, 80]/255;
-% nicegray = [242, 242, 242]/255;
-xmediumgray = [170, 170, 170]/255;
+nicegray = [170, 170, 170]/255;
+LineWidth = 1;
+MarkerSize = 12;
+FontSize = 12;
+plotOpts = {'LineWidth',LineWidth,'MarkerSize',MarkerSize};
 
 % initialize figure
 hf = figure; hf.Color = 'w'; hold on
-LineWidth = 1;
 
 % plot simulation
-plot(T_sim,X_sim(:,1),'Color',xmediumgray,'linewidth',LineWidth,'DisplayName',"CT State 1")
-plot(T_sim,X_sim(:,2),'Color',nicegreen,'linewidth',LineWidth,'DisplayName',"CT State 2")
+plot(T_sim,X_sim(:,1),plotOpts{:},'Color',nicegray,'DisplayName',"CTM State 1")
+plot(T_sim,X_sim(:,2),plotOpts{:},'Color',nicegreen,'DisplayName',"CTM State 2")
 
 % plot difference equation results
-plot(T_dt,X_dt(1,:),'.-','Color',nicered,'linewidth',LineWidth,'MarkerSize',16,...
-    'DisplayName','DT State 1')
-plot(T_dt,X_dt(2,:),'.-','Color',niceblue,'linewidth',LineWidth,'MarkerSize',16,...
-    'DisplayName','DT State 2')
+plot(T_dt,X_dt(1,:),'.-',plotOpts{:},'Color',nicered,'DisplayName','DTM State 1')
+plot(T_dt,X_dt(2,:),'.-',plotOpts{:},'Color',niceblue,'DisplayName','DTM State 2')
 
 xlabel('Time [sec]')
 ylabel('States')
 
-legend();
+ha = gca; ha.XColor = 'k'; ha.YColor = 'k'; ha.LineWidth = 1; ha.FontSize = FontSize;
+
+hl = legend();
 
 end
