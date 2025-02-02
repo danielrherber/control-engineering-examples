@@ -1,24 +1,29 @@
 % ex_modal_interactive.m
-% simulation of a 2nd-order damped oscillator in modal canonical form
+% simulation of a 2nd-order oscillator in modal canonical form
 % interactive sliders available in the figure for the key parameters
+% [reference] pp. 94-99 in LSC
+% [reference] en.wikipedia.org/wiki/Harmonic_oscillator#Damped_harmonic_oscillator
+% [reference] https://www.youtube.com/watch?v=caP8vKHtIY0
+% [course] Session 2 - Analysis of State-Space Models (1)
 close all; clear; clc
 
 % initial parameter values
 w0 = 1;
-zeta = 1;
-X0 = [1;-1];
+zeta = 0.4;
+X0 = [1;0];
 
-% initialize the figure (you should interact with the sliders
+% initialize figure (interact with the sliders rather than the code)
 initialize_figure(zeta,w0,X0);
 
 %--------------------------------------------------------------------------
-% figure code (not the main content)
+% plotting code
+% (not the main content)
 %--------------------------------------------------------------------------
 % initialize figure
 function initialize_figure(zeta,w0,X0)
 
 % axis limit parameter
-lim = 3;
+lim = 2;
 
 % create figure
 hp = figure;
@@ -33,6 +38,7 @@ haxes(1).YLabel.String = 'States';
 haxes(1).XLabel.String = 'Time [sec]';
 haxes(1).LineWidth = 1;
 ylim([-lim+0.5 lim-0.5])
+xlim([0 15])
 hold on
 
 % create state-space plot axis
@@ -93,6 +99,7 @@ update_figure(X,T,zeta,w0,X0,haxes)
 
 end
 
+%--------------------------------------------------------------------------
 % do stuff when the slide values change
 function changed_figure(hObject,event,hall,haxes)
 
@@ -110,6 +117,7 @@ update_figure(X,T,zeta,w0,X0,haxes)
 
 end
 
+%--------------------------------------------------------------------------
 % update the figure's content
 function update_figure(X,T,zeta,w0,X0,haxes)
 
@@ -160,8 +168,7 @@ annotation('textbox','units','pixel','position',[370 140 300 20],...
 niceblue = [77, 121, 167]/255;
 nicered = [225, 86, 86]/255;
 nicegreen = [109, 195, 80]/255;
-% nicegray = [242, 242, 242]/255;
-xmediumgray = [170, 170, 170]/255;
+nicegray = [170, 170, 170]/255;
 
 % plot state trajectories
 delete(haxes(1).Children)
@@ -171,13 +178,14 @@ plot(haxes(1),T,X(:,2),'LineWidth',1.5,'Color',nicered)
 % plot state-space trajectory
 delete(haxes(2).Children)
 plot(haxes(2),X(:,1),X(:,2),'LineWidth',1.5,'Color',nicegreen)
-plot(0,0,'.','Color',xmediumgray,'MarkerSize',16)
+plot(0,0,'.','Color',nicegray,'MarkerSize',16)
 
 % update graphics
 drawnow;
 
 end
 
+%--------------------------------------------------------------------------
 % run the simulation
 function [T,X] = run_simulation(w0,zeta,X0)
 
@@ -185,10 +193,10 @@ function [T,X] = run_simulation(w0,zeta,X0)
 A = [0 1; -w0^2 -2*zeta*w0];
 
 % time horizon
-TSPAN = linspace(0,15,1e3);
+TSPAN = linspace(0,100,1e4);
 
 % simulation options
-OPTIONS = odeset('RelTol',1e-6,'AbsTol',1e-6);
+OPTIONS = odeset('RelTol',1e-5,'AbsTol',1e-5);
 
 % run simulation
 [T,X] = ode45(@(t,x) A*x,TSPAN,X0,OPTIONS);
