@@ -1,3 +1,8 @@
+% ex_simulink_bd.m
+% symbolic calculation of the equivalent transfer function and
+% determination numerator and denominator coefficients
+% [reference] See section Frequency-Domain Block Diagrams
+% [course] Session 4 - Block Diagrams and Linear Control (1)
 close all; clear; clc
 
 % define transfer functions
@@ -21,6 +26,7 @@ D = 1 - G1*G2*H1 + G1*G2*(G3+G4)*H2;
 
 % overall transfer function
 G = N/D;
+G = simplify(G);
 
 % determine numerator and denominator coefficients
 [Nc,Dc] = numden(G);
