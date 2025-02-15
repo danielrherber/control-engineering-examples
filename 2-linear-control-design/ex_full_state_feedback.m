@@ -1,3 +1,8 @@
+% ex_full_state_feedback.m
+% full-state feedback controller design using the place command
+% [reference] Example 4.5 Continuous Control via the Controller Canonical
+% Form in LSC
+% [course] Session 4 - Block Diagrams and Linear Control (1)
 close all; clear; clc
 
 % system matrices
@@ -7,71 +12,112 @@ C = [2 0 0];
 
 % check controllability
 Co = ctrb(A,B);
-rank(Co)==length(A)
+disp(rank(Co)==length(A))
 
-% desired eigenvalues
+% desired time constants
+TC = [0.125,1,1.5,3];
+
+% desired minor eigenvalue offsets for numerical stability
 epsilon = [0 1e-4 -1e-4];
-tc = 1.5;   E1p5 = [-1/tc -1/tc -1/tc]+epsilon;
-tc = 1;     E1 = [-1/tc -1/tc -1/tc]+epsilon;
-tc = 3;     E3 = [-1/tc -1/tc -1/tc]+epsilon;
-tc = 0.125; E0p125 = [-1/tc -1/tc -1/tc]+epsilon;
-
-% closed-loop pole assignment using state feedback
-[K1p5,PREC1] = place(A,B,E1p5);
-[K1,PREC2] = place(A,B,E1);
-[K3,PREC3] = place(A,B,E3);
-[K0p125,PREC4] = place(A,B,E0p125);
 
 % control law
-u = @(x,K,r) -K*x + r;
+u = @(x,K) -K*x;
 
-% feedback state derivative function
-f = @(t,x,A,B,K,r) A*x + B*u(x,K,r);
+% state derivative function
+f = @(t,x,A,B,K) A*x + B*u(x,K);
 
 % simulation options
 TSPAN = [0 30];
 X0 = [1;1;1];
 OPTIONS = odeset('RelTol',1e-13);
 
-% reference input
-r = 0;
+% go through each time constant
+for k = 1:length(TC)
 
-% run the simulations
-[T,X] = ode45(@(t,x) f(t,x,A,B,0*K1p5,r),TSPAN,X0,OPTIONS);
-[T1p5,X1p5] = ode45(@(t,x) f(t,x,A,B,K1p5,r),TSPAN,X0,OPTIONS);
-[T1,X1] = ode45(@(t,x) f(t,x,A,B,K1,r),TSPAN,X0,OPTIONS);
-[T3,X3] = ode45(@(t,x) f(t,x,A,B,K3,r),TSPAN,X0,OPTIONS);
-[T0p125,X0p125] = ode45(@(t,x) f(t,x,A,B,K0p125,r),TSPAN,X0,OPTIONS);
+    % extract
+    tc = TC(k);
 
-% states
+    % desired eigenvalues
+    E = [-1/tc -1/tc -1/tc]+epsilon;
+
+    % closed-loop pole assignment using state feedback
+    [K{k},PREC] = place(A,B,E);
+
+    % run the simulation
+    [T{k},X{k}] = ode45(@(t,x) f(t,x,A,B,K{k}),TSPAN,X0,OPTIONS);
+
+end
+
+% simulate zero gain (uncontrolled) case
+K{k+1} = 0*K{k};
+[T{k+1},X{k+1}] = ode45(@(t,x) f(t,x,A,B,K{k+1}),TSPAN,X0,OPTIONS);
+
+% plot results
+plot_example_add(T,X,K,TC,C)
+
+%--------------------------------------------------------------------------
+% plotting code
+% (not the main content)
+function plot_example_add(T,X,K,TC,C)
+
+% colors and other parameters
+LineWidth = 1;
+FontSize = 12;
+plotOpts = {'LineWidth',LineWidth};
+
+% zero gain (uncontrolled) case
+TC(end+1) = nan;
+
+% initialize figure
 hf = figure; hf.Color = 'w'; hold on
-plot(T,X,'k','DisplayName','original')
-plot(T0p125,X0p125,'m','DisplayName',' 0.125 s')
-plot(T1,X1,'g','DisplayName','1 s')
-plot(T1p5,X1p5,'r','DisplayName','1.5 s')
-plot(T3,X3,'b','DisplayName','3 s')
-xlim([0 30]); ylim([-20 10])
-xlabel('time [sec]'); ylabel('x(t)')
-legend();
 
-% control
-hf = figure; hf.Color = 'w'; hold on
-plot(T,0*K1p5*X' + r,'k','DisplayName','original')
-plot(T0p125,K0p125*X0p125' + r,'m','DisplayName',' 0.125 s')
-plot(T1,K1*X1' + r,'g','DisplayName','1 s')
-plot(T1p5,K1p5*X1p5' + r,'r','DisplayName','1.5 s')
-plot(T3,K3*X3' + r,'b','DisplayName','3 s')
-xlim([0 30]); ylim([-200 200])
-xlabel('time [sec]'); ylabel('u(t)')
-legend();
+% plot state 1
+subplot(2,2,1); hold on;
+ha = gca; ha.XColor = 'k'; ha.YColor = 'k'; ha.LineWidth = 1; ha.FontSize = FontSize;
+xlabel('Time [s]'); ylabel('State 1');
+for k = 1:length(T)
+    plot(T{k},X{k}(:,1),plotOpts{:})
+end
+ylim([-2 1])
 
-% outputs
+% plot state 3
+subplot(2,2,2); hold on;
+ha = gca; ha.XColor = 'k'; ha.YColor = 'k'; ha.LineWidth = 1; ha.FontSize = FontSize;
+xlabel('Time [s]'); ylabel('State 2');
+for k = 1:length(T)
+    plot(T{k},X{k}(:,2),plotOpts{:})
+end
+ylim([-0.5 1])
+
+% plot state 3
+subplot(2,2,3); hold on;
+ha = gca; ha.XColor = 'k'; ha.YColor = 'k'; ha.LineWidth = 1; ha.FontSize = FontSize;
+xlabel('Time [s]'); ylabel('State 3');
+for k = 1:length(T)
+    plot(T{k},X{k}(:,3),plotOpts{:})
+end
+ylim([-6 6])
+
+% plot output
+subplot(2,2,4); hold on;
+ha = gca; ha.XColor = 'k'; ha.YColor = 'k'; ha.LineWidth = 1; ha.FontSize = FontSize;
+xlabel('Time [s]'); ylabel('Output');
+for k = 1:length(T)
+    plot(T{k},sum(C.*X{k},2),plotOpts{:},'DisplayName',strcat("$t_c = ",string(TC(k)),"$"))
+end
+ylim([-2 2])
+hl = legend(); hl.Location = 'best'; hl.Interpreter = 'latex';
+
+% initialize figure
 hf = figure; hf.Color = 'w'; hold on
-plot(T,C*X','k','DisplayName','original')
-plot(T0p125,C*X0p125','m','DisplayName',' 0.125 s')
-plot(T1,C*X1','g','DisplayName','1 s')
-plot(T1p5,C*X1p5','r','DisplayName','1.5 s')
-plot(T3,C*X3','b','DisplayName','3 s')
-xlim([0 30]); ylim([-6 3])
-xlabel('time [sec]'); ylabel('y(t)')
-legend();
+
+% plot control
+ha = gca; ha.XColor = 'k'; ha.YColor = 'k'; ha.LineWidth = 1; ha.FontSize = FontSize;
+xlabel('Time [s]'); ylabel('Control');
+for k = 1:length(T)
+    plot(T{k},sum(-K{k}.*X{k},2),plotOpts{:},'DisplayName',strcat("$t_c = ",string(TC(k)),"$"))
+end
+ylim([-200 200])
+hl = legend(); hl.Location = 'best'; hl.Interpreter = 'latex';
+
+end
