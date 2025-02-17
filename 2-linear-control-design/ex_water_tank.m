@@ -1,7 +1,9 @@
 % ex_water_tank.m
-% matrices for Example 4.13 Water Tank Process Control with Multiple
-% Integrators in LSC used when initializing the Simulin model in
-% ex_water_tank_control.slx
+% matrices for water tank example used when initializing the Simulink model
+% in ex_water_tank_control.slx
+% [reference] Example 4.13 Water Tank Process Control with Multiple
+% Integrators in LSC
+% [course] Session 5 - Linear Control (2)
 close all; clear; clc
 
 n = 4; % states
@@ -104,11 +106,14 @@ P = [-0.095+0.02j -0.095-0.02j -0.08+0.06j -0.08-0.06j -0.05+0.085j -0.05-0.085j
 % A-A2
 % B-B2
 
+% matrices for augmented closed-loop system
 Ai = [A, zeros(n,r); -C zeros(r,r)];
 Bi = [B; zeros(r,m)];
 
+% pole placement
 [K1,PREC] = place(Ai,Bi,P);
 
+% different gains
 K = K1(:,1:n);
 Ki = -K1(:,n+1:end);
 
