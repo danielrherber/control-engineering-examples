@@ -1,7 +1,9 @@
 % ex_observer.m
 % illustration of eigenvalue assignment for a full-order and reduced-order
-% observer from Example 4.20 Reduced Order Observer for a Third Order
-% System in LSC using the Matlab place command
+% observer using the Matlab place command
+% [reference] Example 4.20 Reduced Order Observer for a Third Order System
+% in LSC
+% [course] Session 5 - Linear Control (2)
 close all; clear; clc
 
 % system matrices
@@ -11,6 +13,41 @@ A = [-0.14 0.33 -0.33;
 B = [0; 0; -0.025];
 C = [2 0 0];
 
+% number of states
+n = length(A);
+
+% simulation options
+TFINAL = 10;
+T = linspace(0,TFINAL,10000)';
+U = ones(size(T));
+
+%--------------------------------------------------------------------------
+% full-order observer
+%--------------------------------------------------------------------------
+% desired eigenvalues
+E1 = [-3.5 + 1i*3.5 -3.5 - 1i*3.5 -3.5];
+
+% gain matrix for full-order observer
+L1 = place(A',C',E1)';
+
+% closed-loop system matrices
+Anew = [A zeros(n); L1*C A-L1*C];
+Bnew = [B;B];
+Cnew = blkdiag(C,eye(n));
+sysNew = ss(Anew,Bnew,Cnew,[]);
+
+% initial states
+X0 = [0 0 0 -0.03 0.01 0.02]';
+
+% simulate
+[Y,T,X] = lsim(sysNew,U,T,X0);
+
+% plot the simulation results (see function below)
+plot_example(T,X(:,1:3),Y(:,2:4),1)
+
+%--------------------------------------------------------------------------
+% reduced-order observer
+%--------------------------------------------------------------------------
 % reduce-order observer matrices
 C1 = 2;
 A11 = A(1,1);
@@ -21,43 +58,12 @@ B1 = B(1,:);
 B2 = B(2:3,:);
 
 % desired eigenvalues
-E1 = [-3.5 + 1i*3.5 -3.5 - 1i*3.5 -3.5];
 E2 = [-3.5 + 1i*3.5 -3.5 - 1i*3.5];
-
-% gain matrix for full-order observer
-L1 = place(A',C',E1)';
 
 % gain matrix for reduced-order observer
 L2 = place(A22',(C1*A12)',E2)';
 
-% number of states
-n = length(A);
-
-% closed-loop system matrices
-Anew = [A zeros(n); L1*C A-L1*C];
-Bnew = [B;B];
-Cnew = blkdiag(C,eye(n));
-sysNew = ss(Anew,Bnew,Cnew,[]);
-
-% simulation options
-TFINAL = 10;
-T = linspace(0,TFINAL,10000)';
-U = ones(size(T));
-X0 = [0 0 0 -0.03 0.01 0.02]';
-
-% simulate
-[Y,T,X] = lsim(sysNew,U,T,X0);
-
-% plot states (actual and estimated)
-hf = figure; hf.Color = 'w'; hold on
-plot(T,X(:,1:3),'k','DisplayName','Actual States')
-plot(T,Y(:,2:4),'r','DisplayName','Estimated States')
-xlabel('Time [sec]'); ylabel('States'); legend();
-title('Full-order Observer');
-
-%% reduced-order
 % number of states and outputs
-n = length(A);
 r = size(C1,1);
 
 % closed-loop matrices
@@ -71,18 +77,46 @@ Bnew = [B;B2];
 Cnew = [C zeros(1,n-r); zeros(n-r,n) eye(n-r)];
 sysNew = ss(Anew,Bnew,Cnew,[]);
 
-% simulation options
-TFINAL = 3;
-T = linspace(0,TFINAL,10000)';
-U = ones(size(T));
+% initial states
 X0 = [0 0 0 0.01 0.02]';
 
 % simulate
 [Y,T,X] = lsim(sysNew,U,T,X0);
 
-% plot states (actual and estimated)
+% plot the simulation results (see function below)
+plot_example(T,X(:,1:3),Y(:,2:3),2)
+
+%--------------------------------------------------------------------------
+% plotting code
+% (not the main content)
+function plot_example(T,X,Y,mycase)
+
+% colors and other parameters
+niceblue = [77, 121, 167]/255;
+nicered = [225, 86, 86]/255;
+LineWidth = 1;
+MarkerSize = 12;
+FontSize = 12;
+plotOpts = {'LineWidth',LineWidth,'MarkerSize',MarkerSize};
+
+% initialize figure
 hf = figure; hf.Color = 'w'; hold on
-plot(T,X(:,1:3),'k','DisplayName','Actual States')
-plot(T,Y(:,2:3),'r','DisplayName','Estimated States')
-xlabel('Time [sec]'); ylabel('States'); legend();
-title('Reduced-order Observer');
+
+plot(T,X,plotOpts{:},'Color',nicered,'DisplayName','Actual States')
+plot(T,Y,plotOpts{:},'Color',niceblue,'DisplayName','Estimated States')
+
+xlabel('Time [s]')
+ylabel('States')
+
+ha = gca; ha.XColor = 'k'; ha.YColor = 'k'; ha.LineWidth = 1; ha.FontSize = FontSize;
+
+hl = legend(); hl.Location = "best";
+
+switch mycase
+    case 1
+        title('Full-Order Observer')
+    case 2
+        title('Reduced-Order Observer')
+end
+
+end
