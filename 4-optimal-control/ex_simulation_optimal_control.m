@@ -1,5 +1,11 @@
 % ex_simulation_optimal_control.m
-% example of simulation-based optimal control using fmincon and ode45
+% example of simulation-based optimal control using fmincon and ode45 for
+% the open-loop control design of a constant-thrust rocket from a given
+% initial circular orbit to the largest possible circular orbit
+% [reference] pp. 66-69 in Applied Optimal Control
+% [reference] Moyer and Pinkham (1964), doi: 10.1016/b978-1-4831-9812-5.50008-4
+% [reference] https://github.com/danielrherber/dt-qp-project/tree/master/examples/nonlin/transfer-max-radius
+% [course] Session 10 - Optimal Control (1)
 close all; clear; clc
 
 % problem parameters
@@ -12,20 +18,24 @@ auxdata.X0 = [r0;T0;vr0;vT]; % initial state vector
 auxdata.vrf = 0;  % final vr
 tf = 3.32; % final time
 
-% time grid or mesh
-mesh_opt = 1;
+% mesh or time grid
+mesh_opt = 3;
 switch mesh_opt
+    %----------------------------------------------------------------------
     case 1 % equidistant time grid with N = 10
         auxdata.nt = 9; % number of time points
         auxdata.t = linspace(0,tf,auxdata.nt)'; % equidistant time grid
+    %----------------------------------------------------------------------
     case 2 % equidistant time grid with N = 21
         auxdata.nt = 21; % number of time points
         auxdata.t = linspace(0,tf,auxdata.nt)'; % equidistant time grid
+    %----------------------------------------------------------------------
     case 3
         d = 0.3;
-        auxdata.t = unique([linspace(0,tf/2-d,7),...
-            linspace(tf/2-d,tf/2+d,11),linspace(tf/2+d,tf,7)]'); % irregular time grid
+        auxdata.t = unique([linspace(0,tf/2-d,5),...
+            linspace(tf/2-d,tf/2+d,9),linspace(tf/2+d,tf,5)]'); % irregular time grid
         auxdata.nt = length(auxdata.t); % number of time points
+    %----------------------------------------------------------------------
 end
 
 % number of controls
@@ -56,7 +66,7 @@ U = P(auxdata.phi_indices);
 r = Xo(:,1); T = Xo(:,2); vr = Xo(:,3); vT = Xo(:,4);
 
 % plot results
-plot_helper(r,T,To,U,auxdata)
+plot_example(r,T,To,U,auxdata)
 
 %--------------------------------------------------------------------------
 % compute the objective function
@@ -140,22 +150,37 @@ Dx = [Dr; DT; Dvr; DvT];
 end
 
 %--------------------------------------------------------------------------
-% plot function
-function plot_helper(r,T,To,U,auxdata)
+% plotting code for states and control
+% (not the main content)
+function plot_example(r,T,To,U,auxdata)
 
-% plot theta and r states
+% colors and other parameters
+niceblue = [77, 121, 167]/255;
+nicered = [225, 86, 86]/255;
+LineWidth = 1;
+MarkerSize = 12;
+FontSize = 12;
+plotOpts = {'LineWidth',LineWidth,'MarkerSize',MarkerSize};
+
+% initialize figure for plotting theta and r states
 hf = figure; hf.Color = 'w'; clf;
 
-polarplot(T,r,'linewidth',2,'color','r');
+polarplot(T,r,'linewidth',2*LineWidth,'color',nicered);
 
-% plot control
+ha = gca; ha.ThetaColor = 'k'; ha.RColor = 'k'; ha.LineWidth = 1; ha.FontSize = FontSize;
+
+% initialize figure for plotting control
 hf = figure; hf.Color = 'w'; hold on;
 
-plot(To,rad2deg(interp1(auxdata.t,U,To,'spline')),'r','linewidth',2)
-plot(auxdata.t,rad2deg(U),'.k','markersize',16)
+plot(To,rad2deg(interp1(auxdata.t,U,To,'spline')),plotOpts{:},'Color',niceblue)
+plot(auxdata.t,rad2deg(U),'.k',plotOpts{:})
 
 xlabel('Time')
-ylabel('Control')
+ylabel('Control [deg]')
 legend('Interpolated u(t)','U','Location','best')
+
+ha = gca; ha.XColor = 'k'; ha.YColor = 'k'; ha.LineWidth = 1; ha.FontSize = FontSize;
+
+hl = legend(); hl.Location = "best"; hl.FontSize = FontSize;
 
 end
