@@ -1,5 +1,8 @@
 % ex_fmincon.m
 % example using fmincon to solve a finite-dimensional optimization problem
+% with the initial problem of finding the maximum area rectangle with a
+% prescribed perimeter value
+% [course] Session 09 - Optimal Control (1)
 close all; clear; clc; clear global p_old
 
 % solve the following finite-dimensional optimization problem:
@@ -32,15 +35,18 @@ disp(p_opt)
 disp(J_opt)
 
 % customize the Optimization Plot Function figure
+FontSize = 12;
 hf = figure(1); hf.Color = 'w';
-ha = gca; ha.YScale = 'log';
+ha = hf.Children(7); ha.XColor = 'k'; ha.YColor = 'k'; ha.LineWidth = 1; ha.FontSize = FontSize;
+ha = hf.Children(5); ha.XColor = 'k'; ha.YColor = 'k'; ha.LineWidth = 1; ha.FontSize = FontSize;
+ha.YScale = 'log';
 
 %--------------------------------------------------------------------------
 % objective function
 function J = objective(p)
 
 % objective function value
-J = -p(1)*p(2);
+J = -p(1)*p(2); % maximize area (as a minimization problem)
 % J = p(1)^4 + p(2)^2 + p(1)*p(2); % another objective function
 
 end
@@ -60,12 +66,18 @@ h = 2*p(1) + 2*p(2) - perimeter;
 end
 
 %--------------------------------------------------------------------------
-% NOTE: this stuff below is just to visualize the optimization algorithm
-% progress. It is not needed in the class examples.
+% plotting code to visualize the optimization algorithm
+% (not the main content)
 %--------------------------------------------------------------------------
 % optional customized output function to displaying optimization algorithm
 % progress
 function stop = outfun(p,optimValues,state)
+
+% colors and other parameters
+LineWidth = 1;
+MarkerSize = 12;
+FontSize = 12;
+plotOpts = {'LineWidth',LineWidth,'MarkerSize',MarkerSize};
 
 % don't stop the optimization routing here
 stop = false;
@@ -80,27 +92,30 @@ if isempty(p_old)
 end
 
 % plot current optimization variables (2D problem)
-plot([p_old(1) p(1)],[p_old(2) p(2)],'.-','markersize',16)
+plot([p_old(1) p(1)],[p_old(2) p(2)],'.-',plotOpts{:})
 
 % update x_old
 p_old = p;
 
 % display the current iteration number
-text(p(1)+0.01,p(2)-0.01,string(optimValues.iteration))
+text(p(1)+0.01,p(2)-0.01,string(optimValues.iteration),'FontSize',FontSize)
 
 end
 
 function iteration_plot_setup
 
+% colors and other parameters
+FontSize = 12;
+
 % initialize figure 2
 hf = figure(2); hf.Color = 'w'; clf; hold on
-xlabel('p_1')
-ylabel('p_2')
+
+xlabel('$p_1$','Interpreter','latex','FontSize',FontSize)
+ylabel('$p_2$','Interpreter','latex','FontSize',FontSize)
 
 global x_old
 x_old = [];
 
-ha = gca;
-ha.FontSize = 16;
+ha = gca; ha.XColor = 'k'; ha.YColor = 'k'; ha.LineWidth = 1; ha.FontSize = FontSize;
 
 end
