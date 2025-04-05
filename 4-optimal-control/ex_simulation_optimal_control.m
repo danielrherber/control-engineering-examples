@@ -22,11 +22,11 @@ tf = 3.32; % final time
 mesh_opt = 1;
 switch mesh_opt
     %----------------------------------------------------------------------
-    case 1 % equidistant time grid with N = 10
+    case 1 % equidistant time grid with N+1 = 9
         auxdata.nt = 9; % number of time points
         auxdata.t = linspace(0,tf,auxdata.nt)'; % equidistant time grid
     %----------------------------------------------------------------------
-    case 2 % equidistant time grid with N = 21
+    case 2 % equidistant time grid with N+1 = 21
         auxdata.nt = 21; % number of time points
         auxdata.t = linspace(0,tf,auxdata.nt)'; % equidistant time grid
     %----------------------------------------------------------------------
