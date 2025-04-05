@@ -1,11 +1,13 @@
 % ex_lqr_robot_eqs.m
 % determination of the linear model and infinite-horizon LQR gain matrix
-% for Example 5.6 Steady State LQR for the Two Link Robot in LSC, which is
-% used in ex_lqr_robot_simulink.slx for the simulations
-% *also see Example 4.14 Two Link Robot Arm Control with Multiple
+% for the two-link robot example below in LSC and is used in
+% ex_lqr_robot_simulink.slx for the simulations
+% [reference] Example 5.6 Steady State LQR for the Two Link Robot in LSC
+% [reference] Example 4.14 Two Link Robot Arm Control with Multiple
 % Integrators in LSC where the pole placement gain matrix is determined
-% *also see Example 2.10 Two Link Robot Arm in LSC where the nonlinear and
-% linear model is described
+% [reference] Example 2.10 Two Link Robot Arm in LSC where the nonlinear
+% and linear model is described
+% [course] Session 10 - Optimal Control (2)
 close all; clear; clc
 
 % problem parameters
