@@ -1,7 +1,13 @@
 % ex_direct_transcription.m
 % example of a single-step direct transcription method using the
 % trapezoidal rule for the defect constraints and fmincon to solve the
-% finite-dimensional optimization problem
+% finite-dimensional optimization problem, which is the open-loop control
+% design of a constant-thrust rocket from a given initial circular orbit
+% to the largest possible circular orbit
+% [reference] pp. 66-69 in Applied Optimal Control
+% [reference] Moyer and Pinkham (1964), doi: 10.1016/b978-1-4831-9812-5.50008-4
+% [reference] https://github.com/danielrherber/dt-qp-project/tree/master/examples/nonlin/transfer-max-radius
+% [course] Session 11 - Optimal Control (3)
 close all; clear; clc
 
 % problem parameters
@@ -15,20 +21,24 @@ auxdata.X0 = X0; % initial state vector
 auxdata.vrf = 0;  % final vr
 tf = 3.32; % final time
 
-% time grid or mesh
+% mesh or time grid
 mesh_opt = 1;
 switch mesh_opt
-    case 1 % equidistant time grid with N = 10
+    %----------------------------------------------------------------------
+    case 1 % equidistant time grid with N+1 = 21
         auxdata.nt = 21; % number of time points
         auxdata.t = linspace(0,tf,auxdata.nt)'; % equidistant time grid
-    case 2 % equidistant time grid with N = 21
+    %----------------------------------------------------------------------
+    case 2 % equidistant time grid with N+1 = 101
         auxdata.nt = 101; % number of time points
         auxdata.t = linspace(0,tf,auxdata.nt)'; % equidistant time grid
+    %----------------------------------------------------------------------
     case 3
-        d = 0.3; n_add = 0;
-        auxdata.t = unique([linspace(0,tf/2-d,7+n_add),...
-            linspace(tf/2-d,tf/2+d,11+n_add),linspace(tf/2+d,tf,7+n_add)]'); % irregular time grid
+        d = 0.5; n_add = 0;
+        auxdata.t = unique([linspace(0,tf/2-d,5+n_add),...
+            linspace(tf/2-d,tf/2+d,9+n_add),linspace(tf/2+d,tf,5+n_add)]'); % irregular time grid
         auxdata.nt = length(auxdata.t); % number of time points
+    %----------------------------------------------------------------------
 end
 
 % step sizes
@@ -49,8 +59,10 @@ auxdata.phi_ind = (4*nt)+1:(5*nt);
 % initial guess for all optimization variables (all zeros)
 guess_opt = 2;
 switch guess_opt
+    %----------------------------------------------------------------------
     case 1 % all ones (bad guess)
         P0 = ones(nt*(auxdata.nu+auxdata.nx),1);
+    %----------------------------------------------------------------------
     case 2 % linear (good guess)
         P0 = ones(nt*(auxdata.nu+auxdata.nx),1);
         P0(auxdata.r_ind) = linspace(X0(1),X0(1),nt)';
@@ -58,6 +70,7 @@ switch guess_opt
         P0(auxdata.vr_ind) = linspace(X0(3),X0(3),nt)';
         P0(auxdata.vT_ind) = linspace(X0(4),X0(4),nt)';
         P0(auxdata.phi_ind) = linspace(0,2*pi,nt)';
+    %----------------------------------------------------------------------
 end
 
 % fmincon options
@@ -75,7 +88,7 @@ U = P(auxdata.phi_ind);
     odeset('RelTol',1e-13));
 
 % plot results
-plot_helper(P,To,Xo,auxdata)
+plot_example(P,To,Xo,auxdata)
 
 %--------------------------------------------------------------------------
 % compute the objective function
@@ -194,8 +207,17 @@ Dx = [Dr; DT; Dvr; DvT];
 end
 
 %--------------------------------------------------------------------------
-% plot function
-function plot_helper(P,To,Xo,auxdata)
+% plotting code for states, control, and state errors
+% (not the main content)
+function plot_example(P,To,Xo,auxdata)
+
+% colors and other parameters
+niceblue = [77, 121, 167]/255;
+nicered = [225, 86, 86]/255;
+LineWidth = 1;
+MarkerSize = 12;
+FontSize = 12;
+plotOpts = {'LineWidth',LineWidth,'MarkerSize',MarkerSize};
 
 % extract states and controls from P
 r = P(auxdata.r_ind);
@@ -207,35 +229,53 @@ U = P(auxdata.phi_ind);
 % extract states
 r_ = Xo(:,1); T_ = Xo(:,2); vr_ = Xo(:,3); vT_ = Xo(:,4);
 
-% plot theta and r states
+%--------------------------------------------------------------------------
+% initialize figure for plotting theta and r states
 hf = figure; hf.Color = 'w'; clf;
 
-polarplot(T_,r_,'linewidth',2,'color','r','DisplayName','ode45'); hold on
-polarplot(T,r,'.','markersize',16,'color','g','DisplayName','DT');
+polarplot(T_,r_,plotOpts{:},'color',niceblue,'DisplayName','ode45'); hold on
+polarplot(T,r,'.',plotOpts{:},'color',nicered,'DisplayName','DT');
 
-legend('Location','best')
+ha = gca; ha.ThetaColor = 'k'; ha.RColor = 'k'; ha.LineWidth = 1; ha.FontSize = FontSize;
 
-% plot control
+hl = legend(); hl.Location = "best"; hl.FontSize = FontSize;
+
+%--------------------------------------------------------------------------
+% initialize figure for plotting control
 hf = figure; hf.Color = 'w'; hold on;
 
-plot(To,rad2deg(interp1(auxdata.t,U,To,'linear')),'r','linewidth',2)
-plot(auxdata.t,rad2deg(U),'.k','markersize',16)
+plot(To,rad2deg(interp1(auxdata.t,U,To,'spline')),plotOpts{:},'Color',niceblue)
+plot(auxdata.t,rad2deg(U),'.k',plotOpts{:})
 
 xlabel('Time')
-ylabel('Control')
+ylabel('Control [deg]')
 legend('Interpolated u(t)','U','Location','best')
+
+ha = gca; ha.XColor = 'k'; ha.YColor = 'k'; ha.LineWidth = 1; ha.FontSize = FontSize;
+
+hl = legend(); hl.Location = "best"; hl.FontSize = FontSize;
+
+%--------------------------------------------------------------------------
+% initialize figure for plotting state errors
+hf = figure; hf.Color = 'w'; hold on;
 
 % obtain the optimal solution (original time grid)
 [~,Xo2] = ode45(@(t,x) derivative_simulation(t,x,U,auxdata),auxdata.t,auxdata.X0,...
     odeset('RelTol',1e-13)); % run a simulation
 
-% plot state error
-hf = figure; hf.Color = 'w'; hold on;
+plot(auxdata.t,abs(Xo2(:,1)-r)+eps(1),plotOpts{:},'DisplayName','r error');
+plot(auxdata.t,abs(Xo2(:,2)-T)+eps(1),plotOpts{:},'DisplayName','T error');
+plot(auxdata.t,abs(Xo2(:,3)-vr)+eps(1),plotOpts{:},'DisplayName','vr error');
+plot(auxdata.t,abs(Xo2(:,4)-vT)+eps(1),plotOpts{:},'DisplayName','vT error');
 
-plot(auxdata.t,abs(Xo2-[r,T,vr,vT]),'linewidth',2);
+ha = gca; ha.XColor = 'k'; ha.YColor = 'k'; ha.LineWidth = 1; ha.FontSize = FontSize;
+ha.YScale = 'log';
 
-ha = gca; ha.YScale = 'log';
 xlabel('Time')
 ylabel('State Errors')
+
+ylim([1e-10 1e0])
+
+hl = legend(); hl.Location = "best"; hl.FontSize = FontSize;
 
 end
