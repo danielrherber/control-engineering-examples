@@ -5,7 +5,7 @@
 % [reference] pp. 66-69 in Applied Optimal Control
 % [reference] Moyer and Pinkham (1964), doi: 10.1016/b978-1-4831-9812-5.50008-4
 % [reference] https://github.com/danielrherber/dt-qp-project/tree/master/examples/nonlin/transfer-max-radius
-% [course] Session 10 - Optimal Control (1)
+% [course] Session 10 - Optimal Control (2)
 close all; clear; clc
 
 % problem parameters
@@ -19,7 +19,7 @@ auxdata.vrf = 0;  % final vr
 tf = 3.32; % final time
 
 % mesh or time grid
-mesh_opt = 3;
+mesh_opt = 1;
 switch mesh_opt
     %----------------------------------------------------------------------
     case 1 % equidistant time grid with N = 10
