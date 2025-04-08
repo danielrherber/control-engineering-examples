@@ -53,7 +53,7 @@ Ractual = r'+Cc*X0_stationary';
 % pole placement gain matrix from Example 4.14 in LSC
 %--------------------------------------------------------------------------
 % desired eigenvalues
-P = [-7+1i*7, -7-1i*7, -8.6+1i*5, -8.6-1i*5, -9.7+1i*2.6, -9.7-1i*2.6];
+P = [-7+7i -7-7i -8.6+5i -8.6-5i -9.7+2.6i -9.7-2.6i]*0.7;
 
 % closed-loop pole assignment using state feedback
 Kc = place(Ac,Bc,P);
