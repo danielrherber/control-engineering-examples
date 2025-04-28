@@ -1,6 +1,7 @@
 % ex_lqg.m
-% illustration of the design an Linear-quadratic Gaussian (LQG) regulator
-% www.mathworks.com/help/control/getstart/design-an-lqg-servo-controller.html
+%  illustration of the design an Linear-quadratic Gaussian (LQG) regulator
+% [reference] www.mathworks.com/help/control/getstart/design-an-lqg-servo-controller.html
+% [course] Session 13 - Control under Uncertainty (2)
 close all; clear; clc;
 
 % create the state-space system
