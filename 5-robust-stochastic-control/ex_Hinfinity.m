@@ -38,7 +38,6 @@ Hinf_Pwz_original = mag2db(hinfnorm(P_original))
 Hinf_CL = mag2db(hinfnorm(CL))
 
 % plot singular values of the systems along with achieved gamma
-hf = figure; hf.Color = 'w';
 Gamma = ss(gamma);
 plot_example(P_original,CL,Gamma)
 
